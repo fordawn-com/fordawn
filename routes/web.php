@@ -11,6 +11,13 @@
 |
 */
 
+define('DEFAULT_LARAVEL_VERSION', 5.3);
+
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::group(['prefix'=>'laravel', 'namespace'=>'Laravel'], function() {
+    Route::get('/', 'DocsController@showRootPage');
+    Route::get('/{version}/{page?}', 'DocsController@showPage');
 });
