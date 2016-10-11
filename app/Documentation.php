@@ -17,9 +17,22 @@ class Documentation
         $this->cache = $cache;
     }
 
+    /**
+     * Get the documentation index page.
+     */
     public function getIndex($version)
     {
+        return $this->cache->remember('laravel.'.$version.'.index', 60,
+            function () use ($version){
+                $path = resource_path('docs/laravel/'.$version.'/documentation.md');
 
+                if ($this->files->exists($path)) {
+                    return $this->replaceLinks($version, (new \ParsedownExtra)->text($this->files->get($path)));
+                }
+
+                return null;
+            }
+        );
     }
 
     /**
@@ -43,7 +56,7 @@ class Documentation
     /**
      * Replace the version place-holder in links.
      */
-    public static function replaceLinks($version, $content)
+    protected function replaceLinks($version, $content)
     {
         return str_replace('{{version}}', $version, $content);
     }
@@ -56,5 +69,15 @@ class Documentation
         return [
             '5.3' => '5.3',
         ];
+    }
+
+    /**
+     * Check if the given section exists.
+     */
+    public function sectionExists($version, $page)
+    {
+        return $this->files->exists(
+            base_path('resources/docs/laravel/'.$version.'/'.$page.'.md')
+        );
     }
 }

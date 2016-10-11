@@ -43,6 +43,28 @@ class DocsController extends Controller
         $title = (new Crawler($content))->filterXPath('//h1');
 
         $section = '';
+
+        if ($this->docs->sectionExists($version, $page)) {
+            $section .= '/'.$page;
+        } elseif ( ! is_null($page)) {
+            return redirect('laravel/'.$version);
+        }
+
+        $canonical = null;
+
+        if ($this->docs->sectionExists(DEFAULT_LARAVEL_VERSION, $sectionPage)) {
+            $canonical = 'docs/laravel/'.DEFAULT_LARAVEL_VERSION.'/'.$sectionPage;
+        }
+
+        return view('laravel.docs', [
+            'title' => count($title) ? $title->text() : null,
+            'index' => $this->docs->getIndex($version),
+            'content' => $content,
+            'currentVersion' => $version,
+            'versions' => Documentation::getDocVersions(),
+            'currentSection' => $section,
+            'canonical' => $canonical,
+        ]);
     }
 
     protected function isVersion($version)
