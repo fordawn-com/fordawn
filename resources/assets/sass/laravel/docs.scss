@@ -1,3 +1,10 @@
-body{
-  margin: 0;
-}
+@charset "utf-8";
+
+// base
+@import "1core/settings";
+@import "1core/mixins";
+@import "1core/base";
+
+// content
+@import "1core/header";
+@import "1core/docs";

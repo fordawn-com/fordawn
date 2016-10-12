@@ -19,5 +19,5 @@ const elixir = require('laravel-elixir');
 // });
 
 elixir(mix => {
-    mix.sass('laravel/laravel.scss', 'public/css/laravel/docs.css');
+    mix.sass('laravel/docs.scss', 'public/css/laravel/docs.css');
 });
